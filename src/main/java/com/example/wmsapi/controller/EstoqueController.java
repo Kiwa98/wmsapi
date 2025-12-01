@@ -36,4 +36,9 @@ public class EstoqueController {
     public Estoque atualizar(@PathVariable Long id, @RequestBody Estoque novo) {
         return service.atualizar(id, novo);
     }
+    @DeleteMapping("/{id}")
+    public boolean deletar(@PathVariable Long id) {
+        return service.deletar(id);
+    }
+
 }
