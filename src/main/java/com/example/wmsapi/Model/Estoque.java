@@ -11,7 +11,9 @@ public class Estoque {
     private Long id;
 
     private String nome;
+    @Column(unique = true)
     private String ean;
+    @Column(unique = true)
     private String totvs;
     private int quantidade;
 
