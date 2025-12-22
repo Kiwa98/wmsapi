@@ -10,4 +10,8 @@ public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
     Optional<Estoque> findByEan(String ean);
 
     Optional<Estoque> findByTotvs(String totvs);
+
+    boolean existsByEan(String ean);
+
+    boolean existsByTotvs(String totvs);
 }

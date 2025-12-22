@@ -15,25 +15,63 @@ public class EstoqueService {
         this.repository = repository;
     }
 
+    // ===============================
+    // SALVAR (COM VALIDAÇÃO)
+    // ===============================
     public Estoque salvar(Estoque estoque) {
+
+        // valida EAN duplicado
+        if (repository.existsByEan(estoque.getEan())) {
+            throw new IllegalArgumentException("EAN já cadastrado");
+        }
+
+        // valida TOTVS duplicado
+        if (repository.existsByTotvs(estoque.getTotvs())) {
+            throw new IllegalArgumentException("Código TOTVS já cadastrado");
+        }
+
         return repository.save(estoque);
     }
 
+    // ===============================
+    // LISTAR
+    // ===============================
     public List<Estoque> listar() {
         return repository.findAll();
     }
 
+    // ===============================
+    // ATUALIZAR (COM VALIDAÇÃO)
+    // ===============================
     public Estoque atualizar(Long id, Estoque novo) {
-        return repository.findById(id).map(e -> {
-            e.setNome(novo.getNome());
-            e.setEan(novo.getEan());
-            e.setTotvs(novo.getTotvs());
-            e.setQuantidade(novo.getQuantidade());
-            e.setLocalizacao(novo.getLocalizacao());
-            return repository.save(e);
-        }).orElse(null);
+
+        Estoque atual = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
+
+        // se mudou o EAN, valida duplicidade
+        if (!atual.getEan().equals(novo.getEan())
+                && repository.existsByEan(novo.getEan())) {
+            throw new IllegalArgumentException("EAN já cadastrado");
+        }
+
+        // se mudou o TOTVS, valida duplicidade
+        if (!atual.getTotvs().equals(novo.getTotvs())
+                && repository.existsByTotvs(novo.getTotvs())) {
+            throw new IllegalArgumentException("Código TOTVS já cadastrado");
+        }
+
+        atual.setNome(novo.getNome());
+        atual.setEan(novo.getEan());
+        atual.setTotvs(novo.getTotvs());
+        atual.setQuantidade(novo.getQuantidade());
+        atual.setLocalizacao(novo.getLocalizacao());
+
+        return repository.save(atual);
     }
 
+    // ===============================
+    // DELETAR
+    // ===============================
     public boolean deletar(Long id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
@@ -42,6 +80,9 @@ public class EstoqueService {
         return false;
     }
 
+    // ===============================
+    // BUSCAR POR EAN OU TOTVS
+    // ===============================
     public Estoque buscarPorCodigo(String codigo) {
         return repository.findByEan(codigo)
                 .orElse(repository.findByTotvs(codigo).orElse(null));
