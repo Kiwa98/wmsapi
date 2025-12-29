@@ -16,16 +16,14 @@ public class EstoqueService {
     }
 
     // ===============================
-    // SALVAR (COM VALIDAÇÃO)
+    // SALVAR (PRODUTO)
     // ===============================
     public Estoque salvar(Estoque estoque) {
 
-        // valida EAN duplicado
         if (repository.existsByEan(estoque.getEan())) {
             throw new IllegalArgumentException("EAN já cadastrado");
         }
 
-        // valida TOTVS duplicado
         if (repository.existsByTotvs(estoque.getTotvs())) {
             throw new IllegalArgumentException("Código TOTVS já cadastrado");
         }
@@ -34,27 +32,25 @@ public class EstoqueService {
     }
 
     // ===============================
-    // LISTAR
+    // LISTAR PRODUTOS
     // ===============================
     public List<Estoque> listar() {
         return repository.findAll();
     }
 
     // ===============================
-    // ATUALIZAR (COM VALIDAÇÃO)
+    // ATUALIZAR PRODUTO
     // ===============================
     public Estoque atualizar(Long id, Estoque novo) {
 
         Estoque atual = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Produto não encontrado"));
 
-        // se mudou o EAN, valida duplicidade
         if (!atual.getEan().equals(novo.getEan())
                 && repository.existsByEan(novo.getEan())) {
             throw new IllegalArgumentException("EAN já cadastrado");
         }
 
-        // se mudou o TOTVS, valida duplicidade
         if (!atual.getTotvs().equals(novo.getTotvs())
                 && repository.existsByTotvs(novo.getTotvs())) {
             throw new IllegalArgumentException("Código TOTVS já cadastrado");
@@ -63,14 +59,12 @@ public class EstoqueService {
         atual.setNome(novo.getNome());
         atual.setEan(novo.getEan());
         atual.setTotvs(novo.getTotvs());
-        atual.setQuantidade(novo.getQuantidade());
-        atual.setLocalizacao(novo.getLocalizacao());
 
         return repository.save(atual);
     }
 
     // ===============================
-    // DELETAR
+    // DELETAR PRODUTO
     // ===============================
     public boolean deletar(Long id) {
         if (repository.existsById(id)) {
@@ -81,7 +75,7 @@ public class EstoqueService {
     }
 
     // ===============================
-    // BUSCAR POR EAN OU TOTVS
+    // BUSCAR PRODUTO POR EAN OU TOTVS
     // ===============================
     public Estoque buscarPorCodigo(String codigo) {
         return repository.findByEan(codigo)
