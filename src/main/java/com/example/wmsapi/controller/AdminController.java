@@ -1,5 +1,6 @@
 package com.example.wmsapi.controller;
 
+import com.example.wmsapi.Model.Estoque;
 import com.example.wmsapi.repository.EstoqueRepository;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +20,22 @@ public class AdminController {
     @GetMapping("/limpar-estoque-invalido")
     public String limparEstoqueInvalido() {
 
-        var lista = estoqueRepository.findAll();
+        int removidos = 0;
 
-        lista.stream()
-                .filter(e -> e.getEan() == null || e.getTotvs() == null)
-                .forEach(estoqueRepository::delete);
+        for (Estoque e : estoqueRepository.findAll()) {
 
-        return "Registros inválidos removidos com sucesso";
+            boolean invalido =
+                    e.getNome() == null ||
+                            e.getEan() == null ||
+                            e.getTotvs() == null;
+
+            if (invalido) {
+                estoqueRepository.delete(e);
+                removidos++;
+            }
+        }
+
+        return "Registros inválidos removidos: " + removidos;
     }
+
 }
