@@ -2,6 +2,7 @@ package com.example.wmsapi.controller;
 
 import com.example.wmsapi.repository.EstoqueRepository;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,7 +16,7 @@ public class AdminController {
         this.estoqueRepository = estoqueRepository;
     }
 
-    @DeleteMapping("/limpar-estoque-invalido")
+    @GetMapping("/limpar-estoque-invalido")
     public String limparEstoqueInvalido() {
 
         var lista = estoqueRepository.findAll();
