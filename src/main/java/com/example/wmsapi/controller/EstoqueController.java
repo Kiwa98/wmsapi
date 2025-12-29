@@ -60,4 +60,5 @@ public class EstoqueController {
         }
         return ResponseEntity.notFound().build();
     }
+
 }
